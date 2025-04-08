@@ -1,0 +1,19 @@
+{
+  "name": "moonbase-api",
+  "version": "1.0.0",
+  "main": "./src/server.js",
+  "type": "module",
+  "scripts": {
+    "watch": "node --watch ./src/server.js"
+  },
+  "keywords": [],
+  "author": "louis23412",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
