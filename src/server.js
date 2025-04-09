@@ -4,6 +4,8 @@ import "dotenv/config.js";
 
 import app from './app.js';
 
+import { mongoConnect } from './services/mongo.js';
+
 const PORT = process.env.PORT
 
 const server = https.createServer({
@@ -11,6 +13,12 @@ const server = https.createServer({
     cert : fs.readFileSync('cert.pem')
 }, app)
 
-server.listen(PORT, () => { 
-    console.log(`Server is running on port ${PORT}`)
-})
+const startServer = async () => {
+    await mongoConnect();
+
+    server.listen(PORT, () => { 
+        console.log(`Server is running on port ${PORT}`)
+    })
+}
+
+startServer();
