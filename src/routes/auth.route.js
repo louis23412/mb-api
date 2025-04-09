@@ -1,30 +1,11 @@
 import { Router }  from 'express'
-import jwt from 'jsonwebtoken';
+
+import { httpLoginUser, httpRegisterUser, httpLogoutUser } from './auth.controller.js';
 
 const authRoute = Router();
 
-authRoute.post('/register', (req, res) => {
-    const token = jwt.sign({ foo: 'bar' }, 'use secret key from .env here');
-
-    res.status(501).json({
-        tokenTest : token
-    })
-})
-
-authRoute.post('/login', (req, res) => {
-    const token = jwt.sign({ foo: 'bar' }, 'use secret key from .env here');
-
-    res.status(501).json({
-        tokenTest : token
-    })
-})
-
-authRoute.post('/logout', (req, res) => {
-    const token = jwt.sign({ foo: 'bar' }, 'use secret key from .env here');
-
-    res.status(501).json({
-        tokenTest : token
-    })
-})
+authRoute.post('/register', httpRegisterUser);
+authRoute.post('/login', httpLoginUser);
+authRoute.post('/logout', httpLogoutUser)
 
 export default authRoute;

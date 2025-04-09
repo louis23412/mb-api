@@ -1,8 +1,6 @@
 import fs from 'fs';
 import https from 'https';
-import { config } from 'dotenv';
-
-config();
+import "dotenv/config.js";
 
 import app from './app.js';
 
