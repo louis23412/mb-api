@@ -23,6 +23,27 @@ export async function findUser(username, email) {
     }
 }
 
+export async function returnUser(email) {
+    try {
+        const answer = await usersDatabase.findOne({
+            email
+        },
+        {
+            _id : 0,
+            username : 0,
+            __v : 0
+        })
+
+        if (answer) {
+            return answer
+        }
+
+        return false
+    } catch (err) {
+        return false
+    }
+}
+
 export async function registerUser(username, email, hash) {
     const newId = generateId(username)
 
