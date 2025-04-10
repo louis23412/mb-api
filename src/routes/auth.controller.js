@@ -1,6 +1,8 @@
 import { createToken } from "../utils/tokens.js";
 
-export function httpRegisterUser(req, res) {
+import { findUser, registerUser } from "../models/launches.model.js";
+
+export async function httpRegisterUser(req, res) {
     const { username, password, email } = req.body;
 
     // TODO: Validate username, password, email here
@@ -10,21 +12,29 @@ export function httpRegisterUser(req, res) {
         })
     }
 
-    // TODO: Check if user exists in database here, res.send error if user already exists
+    const userExists = await findUser(username, email);
 
-    // TODO: Register user in database here
+    if (userExists) {
+        return res.status(409).json({
+            error : 'username or email already registered'
+        })
+    }
+
     // TODO: Bcrypt password
+    const hash = password
+    const registered = await registerUser(username, email, hash);
 
-    // Generate new JWT token here
+    if (!registered) {
+        return res.status(500).json({
+            error : 'user registration failed'
+        })
+    }
+
     const newToken = createToken(email);
-
-    // Set new token in req.session (cookies session) here
     req.session.token = newToken;
 
-    // TODO: res.json confirmation of registration here
-
-    return res.status(501).json({
-        message : "Route in development"
+    return res.status(200).json({
+        message : "new user registered"
     })
 }
 
