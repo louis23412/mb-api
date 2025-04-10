@@ -4,7 +4,7 @@ import express from 'express';
 import cookieSession from 'cookie-session';
 import { rateLimit } from 'express-rate-limit'
 
-import authRoute from './routes/auth.route.js';
+import authRoute from './routes/auth/auth.route.js';
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000,

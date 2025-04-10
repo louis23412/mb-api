@@ -1,8 +1,8 @@
 import validator from "validator";
 
-import { checkToken, createToken } from "../utils/tokens.js";
-import { hashPass, compareHash } from "../utils/hash.js";
-import { findUser, returnUser, registerUser } from "../models/launches.model.js";
+import { checkToken, createToken } from "../../utils/tokens.js";
+import { hashPass, compareHash } from "../../utils/hash.js";
+import { findUser, returnUser, registerUser } from "../../models/launches.model.js";
 
 export async function httpRegisterUser(req, res) {
     if (!req.body) {
