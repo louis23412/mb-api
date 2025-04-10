@@ -1,5 +1,11 @@
 import usersDatabase from './launches.mongo.js';
 
+function generateId(username) {
+    const result = Math.random().toString(32).replace('0.', `${username}-`)
+
+    return result;
+}
+
 export async function findUser(username, email) {
     try {
         const answer = await usersDatabase.findOne({
@@ -18,14 +24,17 @@ export async function findUser(username, email) {
 }
 
 export async function registerUser(username, email, hash) {
+    const newId = generateId(username)
+
     try {
         await usersDatabase.insertOne({
+            userId : newId,
             username,
             email,
             hash
         })
 
-        return true;
+        return newId;
     } catch (err) {
         return false;
     }

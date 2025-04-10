@@ -2,13 +2,10 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
-export function createToken(email) {
+export function createToken(id) {
     const payload = {
         exp: Math.floor(Date.now() / 1000) + (60 * 60),
-
-        data : {
-            email
-        }
+        id
     }
 
     const token = jwt.sign(payload, JWT_SECRET_KEY);
