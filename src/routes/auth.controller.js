@@ -21,7 +21,7 @@ export async function httpRegisterUser(req, res) {
 
     if (
         !validator.isEmail(email) || 
-        !validator.isAlphanumeric(username) || username.length < 5  || 
+        !validator.isAlphanumeric(username) || username.length < 5  || username.length > 15 ||
         !validator.isStrongPassword(password)
     ) {
         return res.status(400).json({
