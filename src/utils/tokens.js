@@ -2,11 +2,6 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
-// function calculateExpiration(exp) {
-//     const today = new Date()
-//     const expires = new Date(exp * 1000)
-// }
-
 export function createToken(username) {
     const payload = {
         exp: Math.floor(Date.now() / 1000) + ((60 * 60) * 24),
@@ -24,4 +19,22 @@ export function checkToken(token) {
     } catch(err) {
         return false
     }
+}
+
+export function tokenMiddle(req, res, next) {
+    if (req.session.token) {
+        const isValidToken = checkToken(req.session.token);
+
+        if (!isValidToken) {
+            return res.status(401).json({
+                error : 'access denied'
+            })
+        }
+    } else if (!req.session.token) {
+        return res.status(401).json({
+            error : 'access denied'
+        })
+    }
+
+    next();
 }
