@@ -2,7 +2,7 @@ import validator from "validator";
 
 import { checkToken, createToken } from "../../utils/tokens.js";
 import { hashPass, compareHash } from "../../utils/hash.js";
-import { findUser, returnUser, registerUser } from "../../models/launches.model.js";
+import { findUser, returnUser, registerUser } from "../../models/users/users.model.js";
 
 export async function httpRegisterUser(req, res) {
     if (!req.body) {
@@ -44,31 +44,31 @@ export async function httpRegisterUser(req, res) {
     }
 
     const hash = await hashPass(password);
-    const registeredId = await registerUser(username, email, hash);
+    const registered = await registerUser(username, email, hash);
 
-    if (!registeredId) {
+    if (!registered) {
         return res.status(500).json({
             error : 'user registration failed'
         })
     }
 
-    const newToken = createToken(registeredId);
+    const newToken = createToken(username);
     req.session.token = newToken;
 
     return res.status(200).json({
         message : "new user registered",
-        userId : registeredId
+        username : username
     })
 }
 
 export async function httpLoginUser(req, res) {
     if (req.session.token) {
-        const isValidToken = checkToken(req.session.token);
+        const loggedInUsername = checkToken(req.session.token);
 
-        if (isValidToken) {
+        if (loggedInUsername) {
             return res.status(403).json({
                 error : 'user already logged in',
-                userId : isValidToken
+                username : loggedInUsername
             })
         }
     }
@@ -109,12 +109,12 @@ export async function httpLoginUser(req, res) {
         })
     }
 
-    const newToken = createToken(user.userId);
+    const newToken = createToken(user.username);
     req.session.token = newToken;
 
     return res.status(200).json({
         message : 'login success',
-        userId : user.userId
+        username : user.username
     })
 }
 

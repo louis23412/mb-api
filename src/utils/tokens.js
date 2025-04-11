@@ -2,10 +2,10 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
-export function createToken(id) {
+export function createToken(username) {
     const payload = {
         exp: Math.floor(Date.now() / 1000) + ((60 * 60) * 24),
-        id
+        username
     }
 
     const token = jwt.sign(payload, JWT_SECRET_KEY);
@@ -16,28 +16,13 @@ export function createToken(id) {
 export function checkToken(token) {
     try {
         const decoded = jwt.verify(token, JWT_SECRET_KEY);
-        return decoded.id
+        return decoded.username
     } catch(err) {
         return false
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export function refreshToken(token) {
+function refreshToken(token) {
     // extend token life
     // return new token
 }
