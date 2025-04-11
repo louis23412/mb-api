@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 
 const usersSchema = new mongoose.Schema({
+    lastLogin : {
+        type : Date,
+        required : true
+    },
+
     username : {
         type : String,
         required : true

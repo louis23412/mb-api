@@ -5,11 +5,11 @@ function generateId(username) {
     return result;
 }
 
-function generatePlanet(username) {
+function generatePlanet(username, date) {
     return {
         planetId : `planet-${generateId(username)}`,
 
-        lastUpdate : new Date(),
+        lastUpdate : date,
 
         resources : {
             oxygen : 10000,
@@ -67,6 +67,7 @@ export async function returnUser(email) {
         },
         {
             _id : 0,
+            lastLogin : 0,
             email : 0,
             totalPlanets : 0,
             defaultPlanet : 0,
@@ -86,10 +87,13 @@ export async function returnUser(email) {
 }
 
 export async function registerUser(username, email, hash) {
-    const newPlanet = generatePlanet(username)
+    const insertDate = new Date()
+    const newPlanet = generatePlanet(username, insertDate)
 
     try {
-        await usersDatabase.insertOne({
+        const registerResponse = await usersDatabase.insertOne({
+            lastLogin : insertDate,
+
             username,
             email,
             hash,
@@ -99,8 +103,30 @@ export async function registerUser(username, email, hash) {
             planets : [ newPlanet ]
         })
 
-        return true;
+        if (registerResponse._id) {
+            return true;
+        }
+
+        return false
     } catch (err) {
         return false;
+    }
+}
+
+export async function updateLoginTime(username, date) {
+    try {
+        const loginTimeUpdate = await usersDatabase.updateOne({
+            username
+        }, {
+            $set : { lastLogin : date }
+        })
+
+        if (loginTimeUpdate.modifiedCount === 1) {
+            return true
+        }
+
+        return false
+    } catch(err) {
+        return false
     }
 }

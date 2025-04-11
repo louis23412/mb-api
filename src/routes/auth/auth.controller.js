@@ -2,7 +2,7 @@ import validator from "validator";
 
 import { checkToken, createToken } from "../../utils/tokens.js";
 import { hashPass, compareHash } from "../../utils/hash.js";
-import { findUser, returnUser, registerUser } from "../../models/users/users.model.js";
+import { findUser, returnUser, registerUser, updateLoginTime } from "../../models/users/users.model.js";
 
 export async function httpRegisterUser(req, res) {
     if (!req.body) {
@@ -108,6 +108,15 @@ export async function httpLoginUser(req, res) {
             error : 'invalid username or password'
         })
     }
+
+    const loginUpdate = await updateLoginTime(user.username, new Date());
+
+    if (!loginUpdate) {
+        return res.status(500).json({
+            error : 'login failed'
+        })
+    }
+    //2025-04-11T18:23:13.910+00:00
 
     const newToken = createToken(user.username);
     req.session.token = newToken;
