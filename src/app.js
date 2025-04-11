@@ -8,7 +8,7 @@ import authRoute from './routes/auth/auth.route.js';
 import planetsRoute from './routes/planets/planets.route.js';
 
 const limiter = rateLimit({
-	windowMs: 15 * 60 * 1000,
+	windowMs: 1 * 60 * 1000,
 	limit: 100,
 	standardHeaders: 'draft-8',
 	legacyHeaders: false,
@@ -23,7 +23,12 @@ app.use(helmet());
 app.use(cookieSession({
     name: 'session',
     keys: [process.env.COOKIE_KEY_1, process.env.COOKIE_KEY_2],
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 24 * 60 * 60 * 1000,
+	priority : 'high',
+	sameSite : 'strict',
+	secure : true,
+	httpOnly : true,
+	signed : true
 }));
 
 app.use(express.json());

@@ -2,7 +2,6 @@ import usersDatabase from './users.mongo.js';
 
 function generateId(username) {
     const result = Math.random().toString(32).replace('0.', `${username}-`)
-
     return result;
 }
 

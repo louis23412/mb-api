@@ -66,7 +66,7 @@ export async function httpLoginUser(req, res) {
         const loggedInUsername = checkToken(req.session.token);
 
         if (loggedInUsername) {
-            return res.status(403).json({
+            return res.status(400).json({
                 error : 'user already logged in',
                 username : loggedInUsername
             })
@@ -118,7 +118,7 @@ export async function httpLoginUser(req, res) {
     })
 }
 
-export function httpLogoutUser(req, res) {
+export async function httpLogoutUser(req, res) {
     if (req.session.token) {
         req.session = null
 

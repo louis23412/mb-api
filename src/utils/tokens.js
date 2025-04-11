@@ -2,6 +2,11 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
+// function calculateExpiration(exp) {
+//     const today = new Date()
+//     const expires = new Date(exp * 1000)
+// }
+
 export function createToken(username) {
     const payload = {
         exp: Math.floor(Date.now() / 1000) + ((60 * 60) * 24),
@@ -9,7 +14,6 @@ export function createToken(username) {
     }
 
     const token = jwt.sign(payload, JWT_SECRET_KEY);
-
     return token;
 }
 
@@ -20,14 +24,4 @@ export function checkToken(token) {
     } catch(err) {
         return false
     }
-}
-
-function refreshToken(token) {
-    // extend token life
-    // return new token
-}
-
-function destroyToken() {
-    // destroy token here
-    // maybe return something?
 }
