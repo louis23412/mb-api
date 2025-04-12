@@ -9,7 +9,7 @@ import planetsRoute from './routes/planets/planets.route.js';
 
 const limiter = rateLimit({
 	windowMs: 1 * 60 * 1000,
-	limit: 100,
+	limit: 25,
 	standardHeaders: 'draft-8',
 	legacyHeaders: false,
 })
@@ -23,7 +23,7 @@ app.use(helmet());
 app.use(cookieSession({
     name: 'session',
     keys: [process.env.COOKIE_KEY_1, process.env.COOKIE_KEY_2],
-    maxAge: 24 * 60 * 60 * 1000,
+    maxAge: Number(process.env.SESSION_EXPIRATION_MINUTES) * 60 * 1000,
 	priority : 'high',
 	sameSite : 'strict',
 	secure : true,
