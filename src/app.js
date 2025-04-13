@@ -1,3 +1,4 @@
+import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import express from 'express';
@@ -19,6 +20,9 @@ const app = express();
 app.use(limiter);
 
 app.use(helmet());
+app.use(cors({
+	origin : 'https://localhost'
+}));
 
 app.use(cookieSession({
     name: 'session',
