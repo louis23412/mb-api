@@ -65,10 +65,10 @@ export async function httpLoginUser(req, res) {
     if (req.session.token) {
         const loggedInUsername = checkToken(req.session.token);
 
-        if (loggedInUsername) {
+        if (loggedInUsername.username) {
             return res.status(400).json({
                 error : 'user already logged in',
-                username : loggedInUsername
+                username : loggedInUsername.username
             })
         }
     }
@@ -116,7 +116,6 @@ export async function httpLoginUser(req, res) {
             error : 'login failed'
         })
     }
-    //2025-04-11T18:23:13.910+00:00
 
     const newToken = createToken(user.username);
     req.session.token = newToken;

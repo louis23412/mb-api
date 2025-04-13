@@ -3,10 +3,18 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
 function calcExpiration(iat, exp) {
-    const timeIssued = new Date(iat * 1000)
-    const expireTime = new Date(exp * 1000)
+    const timeIssued = new Date(iat * 1000).getTime()
+    const expireTime = new Date(exp * 1000).getTime()
+    const tokenLife = (expireTime - timeIssued) / 1000 / 60
+    const timeNow = new Date().getTime()
+    const tokenRemainingLife = (expireTime - timeNow) / 1000 / 60
+    const lifeRatio = (tokenRemainingLife / tokenLife) * 100
 
-    console.log((expireTime - timeIssued) / 1000 / 60)
+    if (lifeRatio <= 10) {
+        return true // Return true if token lifetime <= 10% remaining
+    }
+
+    return false
 }
 
 export function createToken(username) {
@@ -22,8 +30,12 @@ export function createToken(username) {
 export function checkToken(token) {
     try {
         const decoded = jwt.verify(token, JWT_SECRET_KEY);
-        // calcExpiration(decoded.iat, decoded.exp)
-        return decoded.username
+        const shouldExtend = calcExpiration(decoded.iat, decoded.exp);
+
+        return {
+            username : decoded.username,
+            extend : shouldExtend
+        }
     } catch(err) {
         return false
     }
@@ -38,6 +50,11 @@ export function tokenMiddle(req, res, next) {
                 error : 'access denied'
             })
         }
+
+        if (isValidToken.extend) {
+            req.session.token = createToken(isValidToken.username)
+        }
+
     } else if (!req.session.token) {
         return res.status(401).json({
             error : 'access denied'
