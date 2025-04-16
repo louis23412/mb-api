@@ -1,0 +1,22 @@
+type Query {
+    logoutUser : Response!
+
+    getCurrencies(username : String!) : Currencies
+}
+
+type Mutation {
+    registerUser(username : String!, email : String!, password : String!) : Response!
+    loginUser(email : String!, password : String!) : Response!
+}
+
+type Currencies {
+    credits : Int!
+    darkMatter : Int!
+}
+
+type Response {
+    status : Boolean!
+    message : String!
+    username : String
+    email : String
+}

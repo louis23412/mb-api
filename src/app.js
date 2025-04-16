@@ -5,8 +5,7 @@ import express from 'express';
 import cookieSession from 'cookie-session';
 import { rateLimit } from 'express-rate-limit'
 
-import authRoute from './routes/auth/auth.route.js';
-import planetsRoute from './routes/planets/planets.route.js';
+import graphqlRoute from './routes/graphql.route.js';
 
 const limiter = rateLimit({
 	windowMs: 1 * 60 * 1000,
@@ -38,7 +37,6 @@ app.use(cookieSession({
 app.use(express.json());
 app.use(morgan("short"));
 
-app.use('/auth', authRoute);
-app.use('/planets', planetsRoute);
+app.use('/graphql', graphqlRoute);
 
 export default app;
