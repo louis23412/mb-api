@@ -81,25 +81,22 @@ export async function registerUser(username, email, password, req, res) {
         !validator.isAlphanumeric(username) || username.length < 5  || username.length > 15 ||
         !validator.isStrongPassword(password)
     ) {
-        res.status(400).json({
-            error : 'invalid user data'
-        })
-
-        return false;
+        return {
+            status : false,
+            message : 'invalid user data'
+        };
     }
 
     const userExists = await findUser(username, email);
 
     if (userExists) {
-        res.status(409).json({
-            error : 'username or email already registered'
-        })
-
-        return false;
+        return {
+            status : false,
+            message : 'username or email already registered'
+        };
     }
 
     const hash = await hashPass(password);
-
     const newToken = createToken(username);
 
     try {
@@ -112,12 +109,24 @@ export async function registerUser(username, email, password, req, res) {
 
         if (registerResponse._id) {
             req.session.token = newToken;
-            return true;
+
+            return {
+                status : true,
+                message : 'registration success',
+                username,
+                email
+            }
         }
 
-        return false
+        return {
+            status : false,
+            message : 'registration failed'
+        }
     } catch (err) {
-        return false;
+        return {
+            status : false,
+            message : 'registration failed'
+        }
     }
 }
 
@@ -126,75 +135,73 @@ export async function loginUser(email, password, req, res) {
         const loggedInUsername = checkToken(req.session.token);
 
         if (loggedInUsername.username) {
-            res.status(400).json({
-                error : 'user already logged in',
+            return {
+                status : false,
+                message : 'user already logged in',
                 username : loggedInUsername.username
-            })
-
-            return false;
+            };
         }
     }
 
     if ( email.length < 1 || password.length < 1) {
-        res.status(400).json({
-            error : 'invalid user data'
-        })
-
-        return false;
+        return {
+            status : false,
+            message : 'invalid user data'
+        };
     }
 
     const user = await returnUser(email);
 
     if (!user) {
-        res.status(401).json({
-            error : 'user not registered'
-        })
-
-        return false;
+        return {
+            status : false,
+            message : 'user not registered'
+        };
     }
 
     const isValidPass = await compareHash(password, user.hash)
 
     if (!isValidPass) {
-        res.status(401).json({
-            error : 'invalid username or password'
-        })
-
-        return false;
+        return {
+            status : false,
+            message : 'invalid username or password',
+        };
     }
 
     const loginUpdate = await updateLoginTime(user.username, new Date());
 
     if (!loginUpdate) {
-        res.status(500).json({
-            error : 'login failed'
-        })
-
-        return false
+        return {
+            status : false,
+            message : 'login failed'
+        }
     }
 
     const newToken = createToken(user.username);
     req.session.token = newToken;
 
-    return true;
+    return {
+        status : true,
+        message : 'login success',
+        username : user.username,
+        email : email
+    };
 }
 
 export async function logoutUser(req, res) {
     if (req.session.token) {
         req.session = null
 
-        res.status(200).json({
+        return {
+            status : true,
             message : 'logout success'
-        })
-
-        return true;
+        };
     }
 
-    res.status(401).json({
-        error : 'not logged in'
-    })
-
-    return false;
+    return {
+        status : false,
+        message : 'not logged in'
+    };
 }
 
 // ----------------------

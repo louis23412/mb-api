@@ -55,7 +55,7 @@ export function tokenValidation(req, res, username) {
 
         if (isValidToken.username !== username) {
             res.status(403).json({
-                error : 'access denied'
+                error : 'not authorized'
             })
 
             return false;
