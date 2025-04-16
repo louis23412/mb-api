@@ -11,16 +11,14 @@ async function findUser(username, email) {
             $or : [{ username }, { email } ]
         }, {
             currencies : 0,
+            lastLogin : 0,
             username : 0,
             email : 0,
             hash : 0,
-            totalPlanets : 0,
-            defaultPlanet : 0,
-            planets : 0,
             __v : 0
         })
 
-        if (answer) {
+        if (answer._id) {
             return true
         }
 
@@ -40,9 +38,6 @@ async function returnUser(email) {
             _id : 0,
             lastLogin : 0,
             email : 0,
-            totalPlanets : 0,
-            defaultPlanet : 0,
-            planets : 0,
             currencies : 0,
             __v : 0
         })
@@ -75,7 +70,7 @@ async function updateLoginTime(username, date) {
     }
 }
 
-export async function registerUser(username, email, password, req, res) {
+export async function registerUser(username, email, password, req) {
     if (
         !validator.isEmail(email) || 
         !validator.isAlphanumeric(username) || username.length < 5  || username.length > 15 ||
@@ -100,11 +95,26 @@ export async function registerUser(username, email, password, req, res) {
     const newToken = createToken(username);
 
     try {
-        const registerResponse = await usersDatabase.insertOne({
+        const registerResponse = await usersDatabase.findOneAndUpdate({
+            username,
+        }, 
+        {
             lastLogin : new Date(),
             username,
             email,
             hash,
+        }, 
+        {
+            upsert : true,
+            new : true,
+            projection : {
+                hash : 0,
+                currencies : 0,
+                username : 0,
+                __v : 0,
+                email : 0,
+                lastLogin : 0
+            }
         })
 
         if (registerResponse._id) {
@@ -130,7 +140,7 @@ export async function registerUser(username, email, password, req, res) {
     }
 }
 
-export async function loginUser(email, password, req, res) {
+export async function loginUser(email, password, req) {
     if (req.session.token) {
         const loggedInUsername = checkToken(req.session.token);
 
@@ -188,7 +198,7 @@ export async function loginUser(email, password, req, res) {
     };
 }
 
-export async function logoutUser(req, res) {
+export async function logoutUser(req) {
     if (req.session.token) {
         req.session = null
 
@@ -204,20 +214,26 @@ export async function logoutUser(req, res) {
     };
 }
 
-// ----------------------
-
-const tempCurrencyObject = {
-    credits : 1000,
-    darkMatter : 100
-}
-
 export async function getCurrencies(username) {
-    return tempCurrencyObject;
-}
+    try {
+        const answer = await usersDatabase.findOne({
+            username
+        },
+        {
+            _id : 0,
+            username : 0,
+            lastLogin : 0,
+            email : 0,
+            hash : 0,
+            __v : 0
+        })
 
-export async function updateCurrencies(username, credits, darkMatter) {
-    credits ? tempCurrencyObject.credits += credits : false
-    darkMatter ? tempCurrencyObject.darkMatter += darkMatter : false
+        if (answer.currencies) {
+            return answer.currencies;
+        }
 
-    return tempCurrencyObject;
+        return;
+    } catch (err) {
+        return;
+    }
 }

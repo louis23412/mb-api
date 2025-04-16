@@ -27,7 +27,7 @@ const usersSchema = new mongoose.Schema({
             default : 1000
         },
 
-        blackMatter : {
+        darkMatter : {
             type : Number,
             default : 100
         }

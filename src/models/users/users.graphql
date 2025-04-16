@@ -7,8 +7,6 @@ type Query {
 type Mutation {
     registerUser(username : String!, email : String!, password : String!) : Response!
     loginUser(email : String!, password : String!) : Response!
-
-    updateCurrencies(username : String!, credits : Int!, darkMatter : Int!) : Currencies
 }
 
 type Currencies {
