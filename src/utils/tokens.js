@@ -47,15 +47,15 @@ export function tokenValidation(req, res, username) {
 
         if (!isValidToken) {
             res.status(401).json({
-                error : 'not valid token test'
+                error : 'access denied'
             })
 
             return false;
         }
 
-        if (!(isValidToken.username === username)) {
-            res.status(401).json({
-                error : 'not valid user test'
+        if (isValidToken.username !== username) {
+            res.status(403).json({
+                error : 'access denied'
             })
 
             return false;
@@ -69,7 +69,7 @@ export function tokenValidation(req, res, username) {
     }
 
     res.status(401).json({
-        error : 'no token test'
+        error : 'access denied'
     })
 
     return false;

@@ -19,7 +19,7 @@ const app = express();
 
 app.use(limiter);
 
-// app.use(helmet());
+app.use(helmet());
 app.use(cors({
 	origin : 'https://localhost'
 }));

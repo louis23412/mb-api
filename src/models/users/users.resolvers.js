@@ -1,22 +1,30 @@
-import { getCurrencies, updateCurrencies } from './users.model.js';
+import { getCurrencies, registerUser, loginUser, updateCurrencies } from './users.model.js';
 import { tokenValidation } from '../../utils/tokens.js';
 
 export default {
     Query : {
-        getCurrencies : (_, args, { req, res }) => {
-            const isValidated = tokenValidation(req, res, args.username)
-
-            if (isValidated) {
-                return getCurrencies(args.username);
-            }
-
-            return;
+        getCurrencies : (_, { username }, { req, res }) => {
+            const isValidated = tokenValidation(req, res, username)
+            return isValidated ? getCurrencies(username) : undefined
         }
     },
 
     Mutation : {
-        updateCurrencies : (_, args) => {
-            return updateCurrencies(args.username, args.credits, args.darkMatter)
+        registerUser : async (_, args, { req, res }) => {
+            return await registerUser(args.username, args.email, args.password, req, res)
+        },
+
+        loginUser : async (_, args, { req, res }) => {
+            return await loginUser(args.email, args.password, req, res)
+        },
+
+        logoutUser : (_, args, { req, res }) => {
+            
+        },
+
+        updateCurrencies : (_, { username, credits, darkMatter }, { req, res }) => {
+            const isValidated = tokenValidation(req, res, username)
+            return isValidated ? updateCurrencies(username, credits, darkMatter) : undefined
         }
     }
 }
