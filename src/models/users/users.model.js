@@ -1,37 +1,9 @@
 import usersDatabase from './users.mongo.js';
 
-function generateId(username) {
-    const result = Math.random().toString(32).replace('0.', `${username}-`)
-    return result;
-}
-
-function generatePlanet(username, date) {
-    return {
-        planetId : `planet-${generateId(username)}`,
-
-        lastUpdate : date,
-
-        resources : {
-            oxygen : 10000,
-
-            helium : 7500,
-
-            iron : 5000,
-
-            crystal : 5000
-        },
-
-        buildings : {
-            commandCenter : {
-                lvl : 1
-            },
-
-            shipyard : { 
-                lvl : 1
-            }
-        }
-    }
-}
+// function generateId(username) {
+//     const result = Math.random().toString(32).replace('0.', `${username}-`)
+//     return result;
+// }
 
 export async function findUser(username, email) {
     try {
@@ -55,7 +27,6 @@ export async function findUser(username, email) {
         return false
 
     } catch (err) {
-        console.log(err)
         return false
     }
 }
@@ -87,20 +58,12 @@ export async function returnUser(email) {
 }
 
 export async function registerUser(username, email, hash) {
-    const insertDate = new Date()
-    const newPlanet = generatePlanet(username, insertDate)
-
     try {
         const registerResponse = await usersDatabase.insertOne({
-            lastLogin : insertDate,
-
+            lastLogin : new Date(),
             username,
             email,
             hash,
-
-            defaultPlanet : newPlanet.planetId,
-
-            planets : [ newPlanet ]
         })
 
         if (registerResponse._id) {
@@ -129,4 +92,22 @@ export async function updateLoginTime(username, date) {
     } catch(err) {
         return false
     }
+}
+
+//---------
+
+const tempCurrencyObject = {
+    credits : 1000,
+    darkMatter : 100
+}
+
+export async function getCurrencies(username) {
+    return tempCurrencyObject;
+}
+
+export async function updateCurrencies(username, credits, darkMatter) {
+    credits ? tempCurrencyObject.credits += credits : false
+    darkMatter ? tempCurrencyObject.darkMatter += darkMatter : false
+
+    return tempCurrencyObject;
 }

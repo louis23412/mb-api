@@ -31,19 +31,7 @@ const usersSchema = new mongoose.Schema({
             type : Number,
             default : 100
         }
-    },
-
-    totalPlanets : {
-        type : Number,
-        default : 1
-    },
-
-    defaultPlanet : {
-        type : String,
-        required : true
-    },
-
-    planets : [ Object ]
+    }
 })
 
 export default mongoose.model('User', usersSchema);

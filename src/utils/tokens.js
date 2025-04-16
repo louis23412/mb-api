@@ -41,25 +41,36 @@ export function checkToken(token) {
     }
 }
 
-export function tokenMiddle(req, res, next) {
+export function tokenValidation(req, res, username) {
     if (req.session.token) {
         const isValidToken = checkToken(req.session.token);
 
         if (!isValidToken) {
-            return res.status(401).json({
-                error : 'access denied'
+            res.status(401).json({
+                error : 'not valid token test'
             })
+
+            return false;
+        }
+
+        if (!(isValidToken.username === username)) {
+            res.status(401).json({
+                error : 'not valid user test'
+            })
+
+            return false;
         }
 
         if (isValidToken.extend) {
             req.session.token = createToken(isValidToken.username)
         }
 
-    } else if (!req.session.token) {
-        return res.status(401).json({
-            error : 'access denied'
-        })
+        return true
     }
 
-    next();
+    res.status(401).json({
+        error : 'no token test'
+    })
+
+    return false;
 }

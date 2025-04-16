@@ -1,7 +1,5 @@
 import { Router }  from 'express';
 
-import { tokenMiddle } from '../../utils/tokens.js';
-
 import { createYoga } from 'graphql-yoga';
 
 import { loadFilesSync}   from '@graphql-tools/load-files';
@@ -14,11 +12,14 @@ const schema = makeExecutableSchema({
     resolvers : loadFilesSync('**/*', { extensions: ['resolvers.js'] })
 })
 
-graphqlRoute.use(tokenMiddle);
+graphqlRoute.get('/', (req, res) => { // Disable GET requests to /graphql
+    res.status(405).json({
+        error : 'not allowed'
+    })
+})
 
 graphqlRoute.use('/', createYoga({
-    schema : schema,
-    graphiql : true
+    schema : schema
 }));
 
 export default graphqlRoute;

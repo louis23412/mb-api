@@ -1,0 +1,20 @@
+type Query {
+    getCurrencies(username : String!) : Currencies
+}
+
+type Mutation {
+    updateCurrencies(username : String!, credits : Int!, darkMatter : Int!) : Currencies
+}
+
+type User {
+    lastLogin : String!
+    username : String!
+    email : String!
+    hash : String!
+    currencies : Currencies
+}
+
+type Currencies {
+    credits : Int!
+    darkMatter : Int!
+}
