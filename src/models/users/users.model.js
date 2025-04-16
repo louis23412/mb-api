@@ -179,8 +179,22 @@ export async function loginUser(email, password, req, res) {
     return true;
 }
 
-export async function logoutUser() {
-    
+export async function logoutUser(req, res) {
+    if (req.session.token) {
+        req.session = null
+
+        res.status(200).json({
+            message : 'logout success'
+        })
+
+        return true;
+    }
+
+    res.status(401).json({
+        error : 'not logged in'
+    })
+
+    return false;
 }
 
 // ----------------------

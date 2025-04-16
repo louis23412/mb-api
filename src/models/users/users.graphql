@@ -1,17 +1,18 @@
 type Query {
+    logoutUser : Boolean
+
     getCurrencies(username : String!) : Currencies
 }
 
 type Mutation {
     registerUser(username : String!, email : String!, password : String!) : Boolean
     loginUser(email : String!, password : String!) : Boolean
-    logoutUser(username : String!) : Boolean
 
     updateCurrencies(username : String!, credits : Int!, darkMatter : Int!) : Currencies
 }
 
 type User {
-    lastLogin : String
+    lastLogin : String!
     username : String!
     email : String!
     hash : String!
