@@ -1,6 +1,6 @@
 import validator from "validator";
 
-import usersDatabase from './users.mongo.js';
+import usersDatabase from '../../models/users.mongo.js';
 
 import { hashPass, compareHash } from '../../utils/hash.js';
 import { createToken, checkToken } from '../../utils/tokens.js';
@@ -10,6 +10,10 @@ async function findUser(username, email) {
         const answer = await usersDatabase.findOne({
             $or : [{ username }, { email } ]
         }, {
+            defaultPlanet : 0,
+            exp : 0,
+            planetList : 0,
+            totalPlanets : 0,
             currencies : 0,
             lastLogin : 0,
             username : 0,
@@ -39,7 +43,11 @@ async function returnUser(email) {
             lastLogin : 0,
             email : 0,
             currencies : 0,
-            __v : 0
+            __v : 0,
+            defaultPlanet : 0,
+            exp : 0,
+            planetList : 0,
+            totalPlanets : 0
         })
 
         if (answer) {
@@ -113,7 +121,11 @@ export async function registerUser(username, email, password, req) {
                 username : 0,
                 __v : 0,
                 email : 0,
-                lastLogin : 0
+                lastLogin : 0,
+                defaultPlanet : 0,
+                exp : 0,
+                planetList : 0,
+                totalPlanets : 0
             }
         })
 
@@ -193,8 +205,7 @@ export async function loginUser(email, password, req) {
     return {
         status : true,
         message : 'login success',
-        username : user.username,
-        email : email
+        username : user.username
     };
 }
 
@@ -212,28 +223,4 @@ export async function logoutUser(req) {
         status : false,
         message : 'not logged in'
     };
-}
-
-export async function getCurrencies(username) {
-    try {
-        const answer = await usersDatabase.findOne({
-            username
-        },
-        {
-            _id : 0,
-            username : 0,
-            lastLogin : 0,
-            email : 0,
-            hash : 0,
-            __v : 0
-        })
-
-        if (answer.currencies) {
-            return answer.currencies;
-        }
-
-        return;
-    } catch (err) {
-        return;
-    }
 }

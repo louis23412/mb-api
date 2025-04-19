@@ -1,0 +1,32 @@
+type Mutation {
+    registerUser(
+        username: String!
+        email: String!
+        password: String!
+    ) : RegisterResponse!
+
+    loginUser(
+        email: String!
+        password: String!
+    ) : LoginResponse!
+
+    logoutUser: LogoutResponse!
+}
+
+type RegisterResponse {
+    status: Boolean!
+    message: String!
+    username: String
+    email: String
+}
+
+type LoginResponse {
+    status: Boolean!
+    message: String!
+    username: String
+}
+
+type LogoutResponse {
+    status: Boolean!
+    message: String!
+}

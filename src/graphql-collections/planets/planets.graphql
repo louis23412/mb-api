@@ -1,0 +1,23 @@
+type Query {
+    viewPlanet(
+        username: String!
+        planetId: String!
+    ) : PlanetResponse!
+}
+
+type Mutation {
+    occupyPlanet(
+        username: String!
+        planetName: String!
+    ) : PlanetResponse!
+}
+
+type Planet {
+    test : String!
+}
+
+type PlanetResponse {
+    status : Boolean!
+    message : String
+    planetData : Planet
+}

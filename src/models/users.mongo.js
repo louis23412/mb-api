@@ -31,6 +31,26 @@ const usersSchema = new mongoose.Schema({
             type : Number,
             default : 100
         }
+    },
+
+    exp : {
+        type : Number,
+        default : 0
+    },
+
+    defaultPlanet : {
+        type : String,
+        default : ''
+    },
+
+    totalPlanets : {
+        type : Number,
+        default : 0
+    },
+
+    planetList : {
+        type : [ Object ],
+        default : []
     }
 })
 

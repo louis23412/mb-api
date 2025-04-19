@@ -1,7 +1,0 @@
-type Query {
-    planets : [ Planet ]
-}
-
-type Planet {
-    test : String!
-}
