@@ -1,7 +1,13 @@
 type Query {
     viewUserProfile(
         username: String!
-    ) : UserProfile!
+    ) : UserProfileResponse!
+}
+
+type UserProfileResponse {
+    status: Boolean!
+    message: String
+    profile: UserProfile
 }
 
 type UserProfile {
