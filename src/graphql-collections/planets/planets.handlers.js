@@ -1,5 +1,7 @@
 import usersDatabase from '../../models/users.mongo.js';
 
+import { calculateUserLevel } from '../../utils/calcLvl.js';
+
 function generatePlanet(name) {
     // generate planet
 
